@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential,load_model
 from tensorflow.keras.layers import SimpleRNN, Dense
 
 # Prepare data
@@ -21,7 +21,7 @@ y = np.array(y)
 @st.cache_resource
 def get_model():
     try:
-        model = load_model("rnn_sequence_model.h5")
+        model = load_model("Rnn_sequence_model.h5")
     except:
         model = Sequential()
         model.add(SimpleRNN(50, activation='relu', input_shape=(window_size, 1)))
