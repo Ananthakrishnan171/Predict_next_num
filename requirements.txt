@@ -1,5 +1,4 @@
-tensorflow
 streamlit
+onnxruntime
 numpy
-h5py
 matplotlib
