@@ -3,27 +3,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
 
-st.set_page_config(page_title="Sequence Next Number Prediction", page_icon="🔢", layout="centered")
+# Load the trained model
+@st.cache_resource
+def load_rnn_model():
+    model = load_model("Rnn_sequence_model.h5")
+    return model
 
-st.title("🔢 Predict the Next Number in a Sequence")
-st.write("Provide 3 consecutive numbers. The model will predict the next one.")
+model = load_rnn_model()
 
-model = load_model("Rnn_sequence_model.h5")
+st.title("Predict Next Number in a Sequence (RNN Model)")
 
-# Input columns
+st.header("Input 3 Sequential Numbers")
 col1, col2, col3 = st.columns(3)
-n1 = col1.number_input("First number", value=1, step=1)
-n2 = col2.number_input("Second number", value=2, step=1)
-n3 = col3.number_input("Third number", value=3, step=1)
+num1 = col1.number_input("Number 1", value=1)
+num2 = col2.number_input("Number 2", value=2)
+num3 = col3.number_input("Number 3", value=3)
 
-if st.button("Predict"):
-    input_seq = np.array([[n1, n2, n3]]).reshape((1, 3, 1))
-    predicted = model.predict(input_seq, verbose=0)
-    st.success(f"👉 Predicted Next Number: **{predicted[0][0]:.2f}**")
+# Prepare input for prediction
+input_data = np.array([[[num1], [num2], [num3]]], dtype=np.float32)
+prediction = model.predict(input_data, verbose=0)
+predicted_value = prediction[0][0]
 
-# Plotting the sequence prediction as in your original notebook
+st.success(f"Predicted Next Number: **{predicted_value:.2f}**")
+
+st.header("Visualization on 1 to 100 Sequence (Training Set)")
+
+# Prepare sequence data for visualization
 sequence = np.array([i for i in range(1, 101)])
 window_size = 3
+
 X = []
 y = []
 
@@ -34,15 +42,16 @@ for i in range(len(sequence) - window_size):
 X = np.array(X).reshape((len(X), window_size, 1))
 y = np.array(y)
 
-y_pred = model.predict(X, verbose=0)
+# Predict on whole 1-100 sequence
+y_pred = model.predict(X, verbose=0).flatten()
 
+# Plotting
 fig, ax = plt.subplots(figsize=(10, 4))
-ax.plot(range(window_size, 100), y, label='Actual')
-ax.plot(range(window_size, 100), y_pred.flatten(), linestyle='--', label='Predicted')
-ax.set_title("RNN Sequence Prediction (1-100)")
+ax.plot(range(window_size, 100), y, label="Actual", linewidth=2)
+ax.plot(range(window_size, 100), y_pred, label="Predicted", linestyle="--", linewidth=2)
 ax.set_xlabel("Time Step")
 ax.set_ylabel("Value")
-ax.grid(True)
+ax.set_title("RNN Sequence Prediction (1 to 100)")
 ax.legend()
-
+ax.grid(True)
 st.pyplot(fig)
