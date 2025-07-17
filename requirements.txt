@@ -1,4 +1,5 @@
 streamlit
 numpy
-keras
-tensorflow
+h5py
+tensorflow==2.12.0
+keras==2.12.0
