@@ -1,4 +1,5 @@
 streamlit
 numpy
-keras
-tensorflow
+tensorflow==2.12.0
+h5py
+matplotlib
