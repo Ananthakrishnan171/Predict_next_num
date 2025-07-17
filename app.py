@@ -8,7 +8,7 @@ st.set_page_config(page_title="Sequence Next Number Prediction", page_icon="🔢
 st.title("🔢 Predict the Next Number in a Sequence")
 st.write("Provide 3 consecutive numbers. The model will predict the next one.")
 
-model = load_model("rnn_sequence_model.h5")
+model = load_model("Rnn_sequence_model.h5")
 
 # Input columns
 col1, col2, col3 = st.columns(3)
